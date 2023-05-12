@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -39,7 +40,7 @@ class HorseTest {
 //    }
 
     @ParameterizedTest
-    @ValueSource(strings = { "", " ", "\t" })
+    @ValueSource(strings = { "", " ", "\t", "\n\n" })
     public void constructorEmptyParamsTextException(String argument)
     {
         Exception exception = assertThrows(
@@ -84,11 +85,25 @@ class HorseTest {
     }
 
     @Test
-    public void move()
+    public void moveUserGetRandom()
     {
-        Horse horse = Mockito.mock(Horse.class);
-        horse.move();
+        try (MockedStatic<Horse> mockedStatic = Mockito.mockStatic(Horse.class)) {
+            new Horse("Лошадка", 1, 1).move();
 
-        Mockito.verify(horse).move();
+            mockedStatic.verify(()->Horse.getRandomDouble(0.2, 0.9));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0.1, 0.2, 0.5, 0.9, 1.0, 999.999, 0.0})
+    public void move(double random) {
+        try (MockedStatic<Horse> mockedStatic = Mockito.mockStatic(Horse.class)) {
+            Horse horse = new Horse("имяЛошади", 31, 32);
+            mockedStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(random);
+
+            horse.move();
+
+            assertEquals(32 + 31 * random, horse.getDistance());
+        }
     }
 }

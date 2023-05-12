@@ -1,4 +1,3 @@
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +14,17 @@ public class Hippodrome {
 
     public Hippodrome(List<Horse> horses) {
 
-        logger.info("Начало скачек. Количество участников: " + horses.size());
-
         if (isNull(horses)) {
+            logger.error("Horses list is null");
+
             throw new IllegalArgumentException("Horses cannot be null.");
         } else if (horses.isEmpty()) {
+            logger.error("Horses list is empty");
+
             throw new IllegalArgumentException("Horses cannot be empty.");
         }
+
+        logger.debug("Создание Hippodrome, лошадей [{}]", horses.size());
 
         this.horses = horses;
     }

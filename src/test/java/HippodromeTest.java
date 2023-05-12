@@ -42,23 +42,28 @@ class HippodromeTest {
 
     @Test
     void move() {
-        List<Horse> horsesList = get50HorseList();
+        List<Horse> horsesList = new ArrayList<>();
 
-        Hippodrome hippodrome = Mockito.mock(Hippodrome.class);
-        hippodrome.move();
+        for (int i=0; i<50; i++) {
+            horsesList.add(Mockito.mock(Horse.class));
+        }
 
-        Mockito.verify(hippodrome).move();
+        new Hippodrome(horsesList).move();
+
+        for (Horse horse : horsesList) {
+            Mockito.verify(horse, Mockito.times(1)).move();
+        }
     }
 
     @Test
     void getWinner() {
-        int maxDistance = 50;
+        Horse horse = new Horse("Прилив", 0, 0);
+        Horse horse2 = new Horse("Сияние", 0, 50);
+        Horse horse3 = new Horse("Творение", 0, 49.9999);
 
-        List<Horse> horsesList = get50HorseList();
-        Hippodrome hippodrome = new Hippodrome(horsesList);
-        Horse horse = hippodrome.getWinner();
+        Hippodrome hippodrome = new Hippodrome(List.of(horse, horse2, horse3));
 
-        assertEquals(maxDistance, horse.getDistance());
+        assertSame(horse2, hippodrome.getWinner());
     }
 
     private List<Horse> get30HorseList() {
@@ -94,34 +99,6 @@ class HippodromeTest {
         horsesList.add(new Horse("Леон", 0, 0));
         horsesList.add(new Horse("Топ", 0, 0));
         horsesList.add(new Horse("Бегун", 0, 0));
-
-        return horsesList;
-    }
-
-    private List<Horse> get50HorseList() {
-        List<Horse> horsesList = get30HorseList();
-
-        horsesList.add(new Horse("Цвет", 0, 0));
-        horsesList.add(new Horse("Мед", 0, 0));
-        horsesList.add(new Horse("Дуб", 0, 0));
-        horsesList.add(new Horse("Липа", 0, 0));
-        horsesList.add(new Horse("Медведь", 0, 0));
-        horsesList.add(new Horse("Лиса", 0, 0));
-        horsesList.add(new Horse("Лист", 0, 0));
-        horsesList.add(new Horse("Прилив", 0, 0));
-        horsesList.add(new Horse("Сияние", 0, 50));
-        horsesList.add(new Horse("Творение", 0, 0));
-        horsesList.add(new Horse("Осень", 0, 0));
-        horsesList.add(new Horse("Лето", 0, 0));
-        horsesList.add(new Horse("Зима", 0, 0));
-        horsesList.add(new Horse("Весна", 0, 0));
-        horsesList.add(new Horse("Кофе", 0, 0));
-        horsesList.add(new Horse("Край", 0, 0));
-        horsesList.add(new Horse("Мера", 0, 0));
-        horsesList.add(new Horse("Аршин", 0, 0));
-        horsesList.add(new Horse("Куна", 0, 0));
-        horsesList.add(new Horse("Крен", 0, 0));
-        horsesList.add(new Horse("Лед", 0, 0));
 
         return horsesList;
     }
